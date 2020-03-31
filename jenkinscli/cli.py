@@ -2,6 +2,7 @@ import click
 import jenkins
 import sys
 import os
+import time
 
 from jenkinscli import config
 from jenkinscli import console
@@ -60,6 +61,22 @@ def build_output(job_name, build_number):
     if not build_number:
         build_number = server.get_job_info(job_name)['lastBuild']['number']
     click.echo(server.get_build_console_output(job_name, build_number))
+
+@main.command()
+@click.argument('job_name')
+@click.argument('build_number', type=int, required=False)
+def build_output_stream(job_name, build_number):
+    if not build_number:
+        build_number = server.get_job_info(job_name)['lastBuild']['number']
+    start = 0
+    while True:
+        res = server.get_build_progressive_console_output(job_name, build_number, start=start)
+        click.echo(res['output'].strip())
+        time.sleep(2)
+        if not res['more']:
+            break
+        else:
+            start = start + res['size']
 
 @main.command()
 @click.argument('job_name')
