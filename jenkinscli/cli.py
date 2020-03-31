@@ -80,9 +80,13 @@ def build_output_stream(job_name, build_number):
 
 @main.command()
 @click.argument('job_name')
-@click.argument('params', required=False)
+@click.option('-p', '--params', multiple=True)
 def build(job_name, params):
-    click.echo(server.build_job(job_name, parameters={'dummy': ''}))
+    parameters = {'dummy': ''}
+    for p in params:
+        p = p.split('=')
+        parameters[p[0]] = p[1]
+    click.echo(server.build_job(job_name, parameters=parameters))
 
 @main.command()
 @click.argument('job_name')
