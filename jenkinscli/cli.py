@@ -83,3 +83,11 @@ def build_output_stream(job_name, build_number):
 @click.argument('params', required=False)
 def build(job_name, params):
     click.echo(server.build_job(job_name, parameters={'dummy': ''}))
+
+@main.command()
+@click.argument('job_name')
+@click.argument('build_number', type=int, required=False)
+def build_stop(job_name, build_number):
+    if not build_number:
+        build_number = server.get_job_info(job_name)['lastBuild']['number']
+    server.stop_build(job_name, build_number)
