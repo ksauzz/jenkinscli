@@ -1,3 +1,4 @@
 python-jenkins @ git+https://github.com/ksauzz/python-jenkins.git@feature/stream-output#egg=python-jenkins
 click>=7.1,<8.0
 PyYaml>=5.3.1<6.0
+click-log>=0.3.2<0.4

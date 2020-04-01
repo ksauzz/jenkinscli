@@ -3,6 +3,12 @@ import jenkins
 import sys
 import os
 import time
+import logging
+import click_log
+
+logger = logging.getLogger(__name__)
+click_log.basic_config(logger)
+
 
 from jenkinscli import config
 from jenkinscli import console
@@ -13,11 +19,27 @@ from jenkinscli import server
 @click.option('--user')
 @click.option('--password')
 @click.option('-k', '--insecure', is_flag=True)
+@click_log.simple_verbosity_option(logger)
 def main(**kwargs):
     config.init(**kwargs)
     if config.insecure:
         # this is defined in jenkins
         os.environ['PYTHONHTTPSVERIFY'] = '0'
+
+    def mask(secret):
+        if not secret:
+            return secret
+        elif len(secret) < 4:
+            return '*' * len(secret)
+        else:
+            return secret[:3] + '*' * (len(secret) - 3)
+
+
+    format = "{:10}: {}"
+    logger.debug(format.format('url', config.url))
+    logger.debug(format.format('name', config.user))
+    logger.debug(format.format('password', mask(config.password)))
+    logger.debug(format.format('insecure', config.insecure))
 
     global server
     server = jenkins.Jenkins(config.url, username=config.user, password=config.password)
@@ -71,10 +93,12 @@ def build_output_stream(job_name, build_number):
     start = 0
     while True:
         res = server.get_build_progressive_console_output(job_name, build_number, start=start)
-        click.echo(res['output'].strip())
+        if start != res['size']:
+            click.echo(res['output'].strip())
+        logger.debug('got console output: more={}, start={}, next_start={}'.format(res['more'], start, res['size']))
         time.sleep(2)
         if res['more']:
-            start = start + res['size']
+            start = res['size']
         else:
             break
 
