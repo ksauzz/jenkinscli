@@ -21,6 +21,12 @@ def set_loglevel(verbose):
         logger.debug('change loglevel to DEBUG')
 
 
+# TODO: refactor
+def get_latest_build_number(job_name):
+        click.echo('looking up the latest build number...\n')
+        return server.get_job_info(job_name)['lastBuild']['number']
+
+
 @click.group()
 @click.option('--url')
 @click.option('--user')
@@ -82,7 +88,7 @@ def job(job_name):
 @click.argument('build_number', type=int, required=False)
 def build_info(job_name, build_number):
     if not build_number:
-        build_number = server.get_job_info(job_name)['lastBuild']['number']
+        build_number = get_latest_build_number(job_name)
     build = server.get_build_info(job_name, build_number)
     console.print_build(build)
 
@@ -91,7 +97,7 @@ def build_info(job_name, build_number):
 @click.argument('build_number', type=int, required=False)
 def build_output(job_name, build_number):
     if not build_number:
-        build_number = server.get_job_info(job_name)['lastBuild']['number']
+        build_number = get_latest_build_number(job_name)
     click.echo(server.get_build_console_output(job_name, build_number))
 
 @main.command()
@@ -99,7 +105,7 @@ def build_output(job_name, build_number):
 @click.argument('build_number', type=int, required=False)
 def build_output_stream(job_name, build_number):
     if not build_number:
-        build_number = server.get_job_info(job_name)['lastBuild']['number']
+        build_number = get_latest_build_number(job_name)
     start = 0
     while True:
         res = server.get_build_progressive_console_output(job_name, build_number, start=start)
@@ -127,5 +133,5 @@ def build(job_name, params):
 @click.argument('build_number', type=int, required=False)
 def build_stop(job_name, build_number):
     if not build_number:
-        build_number = server.get_job_info(job_name)['lastBuild']['number']
+        build_number = get_latest_build_number(job_name)
     server.stop_build(job_name, build_number)
