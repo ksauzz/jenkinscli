@@ -37,3 +37,7 @@ def print_action(action):
             for key in action['buildsByBranchName']:
                 click.echo(format.format('branch', key))
 
+        elif action['_class'] == 'hudson.model.ParametersAction':
+            for param in action['parameters']:
+                click.echo(format.format('param', "{}={}".format(param['name'], param['value'])))
+
