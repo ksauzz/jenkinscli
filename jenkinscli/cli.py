@@ -4,23 +4,33 @@ import sys
 import os
 import time
 import logging
-import click_log
-
-logger = logging.getLogger(__name__)
-click_log.basic_config(logger)
-
 
 from jenkinscli import config
 from jenkinscli import console
 from jenkinscli import server
+
+
+logformat = '%(asctime)s %(levelname)s %(message)s'
+logging.basicConfig(format=logformat, level=logging.WARN)
+
+logger = logging.getLogger(__name__)
+
+def set_loglevel(verbose):
+    if verbose > 0:
+        logging.getLogger().setLevel(logging.DEBUG)
+        logger.debug('change loglevel to DEBUG')
+
 
 @click.group()
 @click.option('--url')
 @click.option('--user')
 @click.option('--password')
 @click.option('-k', '--insecure', is_flag=True)
-@click_log.simple_verbosity_option(logger)
+@click.option('-v', '--verbose', count=True)
 def main(**kwargs):
+    set_loglevel(kwargs['verbose'])
+    del kwargs['verbose']
+
     config.init(**kwargs)
     if config.insecure:
         # this is defined in jenkins
