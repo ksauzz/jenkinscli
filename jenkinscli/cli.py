@@ -73,10 +73,10 @@ def build_output_stream(job_name, build_number):
         res = server.get_build_progressive_console_output(job_name, build_number, start=start)
         click.echo(res['output'].strip())
         time.sleep(2)
-        if not res['more']:
-            break
-        else:
+        if res['more']:
             start = start + res['size']
+        else:
+            break
 
 @main.command()
 @click.argument('job_name')
