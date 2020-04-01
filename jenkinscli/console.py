@@ -22,7 +22,8 @@ def print_builds(builds, limit=5):
 
 def print_build(build):
     format = '{:15}: {}'
-    click.echo(format.format('result', build['result']))
+    click.echo(format.format('Number', build['number']))
+    click.echo(format.format('Result', build['result']))
     for action in build['actions']:
         print_action(action)
 
@@ -31,13 +32,18 @@ def print_action(action):
     if '_class' in action:
         if action['_class'] == 'hudson.model.CauseAction':
             shortDesc = list(map(lambda x: x['shortDescription'], action['causes']))[0]
-            click.echo(format.format('short desc', shortDesc))
+            click.echo(format.format('Short Desc', shortDesc))
 
         elif action['_class'] == 'hudson.plugins.git.util.BuildData':
             for key in action['buildsByBranchName']:
-                click.echo(format.format('branch', key))
+                click.echo(format.format('Branch', key))
 
         elif action['_class'] == 'hudson.model.ParametersAction':
+            first = True
+            name = 'Parameters'
             for param in action['parameters']:
-                click.echo(format.format('param', "{}={}".format(param['name'], param['value'])))
+                click.echo(format.format(name, "{}={}".format(param['name'], param['value'])))
+                if first:
+                    first = False
+                    name = ''
 
