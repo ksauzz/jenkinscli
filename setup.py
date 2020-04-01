@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 def read_requirements(file):
     with open(file, "r") as f:
-        return f.read().split()
+        return f.readlines()
 
 
 install_requires = read_requirements("requirements.txt")
