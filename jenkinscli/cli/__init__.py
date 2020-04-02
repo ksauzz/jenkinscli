@@ -23,11 +23,11 @@ def set_loglevel(verbose):
 
 
 @click.group()
-@click.option('--url')
-@click.option('--user')
-@click.option('--password')
-@click.option('-k', '--insecure', is_flag=True)
-@click.option('-v', '--verbose', count=True)
+@click.option('--url', help='jenkins\' endpoint')
+@click.option('--user', help='jenkins\' user')
+@click.option('--password', help='jenkins\' API token')
+@click.option('-k', '--insecure', is_flag=True, help='disable verifying server certificate')
+@click.option('-v', '--verbose', count=True, help='verbose log')
 def main(**kwargs):
     set_loglevel(kwargs['verbose'])
     del kwargs['verbose']

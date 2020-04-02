@@ -7,6 +7,7 @@ from jenkinscli import console
 
 @click.group()
 def job():
+    """Job Commands"""
     pass
 
 
