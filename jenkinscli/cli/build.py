@@ -24,17 +24,16 @@ def info(job_name, build_number):
 @build.command()
 @click.argument('job_name')
 @click.argument('build_number', type=int, required=False)
-def output(job_name, build_number):
+@click.option('-f', '--follow', is_flag=True)
+def output(job_name, build_number, follow):
     if not build_number:
         build_number = get_latest_build_number(job_name)
-    click.echo(server().get_build_console_output(job_name, build_number))
+    if follow:
+        _streaming_output(job_name, build_number)
+    else:
+        click.echo(server().get_build_console_output(job_name, build_number))
 
-@build.command()
-@click.argument('job_name')
-@click.argument('build_number', type=int, required=False)
-def output_stream(job_name, build_number):
-    if not build_number:
-        build_number = get_latest_build_number(job_name)
+def _streaming_output(job_name, build_number):
     start = 0
     while True:
         res = server().get_build_progressive_console_output(job_name, build_number, start=start)
