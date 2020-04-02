@@ -60,21 +60,34 @@ def main(**kwargs):
     global server
     server = jenkins.Jenkins(config.url, username=config.user, password=config.password)
 
-@main.command()
+
+@click.group()
+def job():
+    pass
+
+@click.group()
+def build():
+    pass
+
+main.add_command(job)
+main.add_command(build)
+
+@job.command()
 @click.option('-d','--depth', default=0)
 @click.option('-p','--prefix', default=None)
-def jobs(depth, prefix):
+def list(depth, prefix):
     jobs = server.get_jobs(folder_depth=depth)
     if prefix:
-        jobs = list(filter(lambda x: x['fullname'].startswith(prefix) ,jobs))
+        import builtins
+        jobs = builtins.list(filter(lambda x: x['fullname'].startswith(prefix) ,jobs))
     if len(jobs) == 0:
         click.echo('job is not found')
         sys.exit(1)
     console.print_jobs(jobs)
 
-@main.command()
+@job.command()
 @click.argument('job_name')
-def job(job_name):
+def info(job_name):
     job = server.get_job_info(job_name)
 
     if 'jobs' in job:
@@ -83,27 +96,27 @@ def job(job_name):
     else:
         console.print_job(job)
 
-@main.command()
+@build.command()
 @click.argument('job_name')
 @click.argument('build_number', type=int, required=False)
-def build_info(job_name, build_number):
+def info(job_name, build_number):
     if not build_number:
         build_number = get_latest_build_number(job_name)
     build = server.get_build_info(job_name, build_number)
     console.print_build(build)
 
-@main.command()
+@build.command()
 @click.argument('job_name')
 @click.argument('build_number', type=int, required=False)
-def build_output(job_name, build_number):
+def output(job_name, build_number):
     if not build_number:
         build_number = get_latest_build_number(job_name)
     click.echo(server.get_build_console_output(job_name, build_number))
 
-@main.command()
+@build.command()
 @click.argument('job_name')
 @click.argument('build_number', type=int, required=False)
-def build_output_stream(job_name, build_number):
+def output_stream(job_name, build_number):
     if not build_number:
         build_number = get_latest_build_number(job_name)
     start = 0
@@ -118,20 +131,20 @@ def build_output_stream(job_name, build_number):
         else:
             break
 
-@main.command()
+@build.command()
 @click.argument('job_name')
 @click.option('-p', '--params', multiple=True)
-def build(job_name, params):
+def run(job_name, params):
     parameters = {'dummy': ''}
     for p in params:
         p = p.split('=')
         parameters[p[0]] = p[1]
     click.echo(server.build_job(job_name, parameters=parameters))
 
-@main.command()
+@build.command()
 @click.argument('job_name')
 @click.argument('build_number', type=int, required=False)
-def build_stop(job_name, build_number):
+def stop(job_name, build_number):
     if not build_number:
         build_number = get_latest_build_number(job_name)
     server.stop_build(job_name, build_number)
