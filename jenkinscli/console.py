@@ -1,5 +1,6 @@
 import click
 
+
 def print_jobs(jobs):
     longest_name = max(jobs, key=lambda x: len(x['fullname']))['fullname']
     format = "{:>"+str(len(longest_name))+"}:  {}"
@@ -8,10 +9,12 @@ def print_jobs(jobs):
     for job in jobs:
         click.echo(format.format(job['fullname'], job['url']))
 
+
 def print_job(job):
     click.echo("Name: {}".format(job['name']))
     if 'builds' in job:
         print_builds(job['builds'])
+
 
 def print_builds(builds, limit=5):
     i = 0
@@ -20,12 +23,14 @@ def print_builds(builds, limit=5):
             click.echo("Build: {}".format(build['number']))
             i += 1
 
+
 def print_build(build):
     format = '{:15}: {}'
     click.echo(format.format('Number', build['number']))
     click.echo(format.format('Result', build['result']))
     for action in build['actions']:
         print_action(action)
+
 
 def print_action(action):
     format = '{:15}: {}'
@@ -46,4 +51,3 @@ def print_action(action):
                 if first:
                     first = False
                     name = ''
-

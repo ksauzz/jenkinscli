@@ -4,22 +4,25 @@ import sys
 from jenkinscli import server
 from jenkinscli import console
 
+
 @click.group()
 def job():
     pass
 
+
 @job.command()
-@click.option('-d','--depth', default=0)
-@click.option('-p','--prefix', default=None)
+@click.option('-d', '--depth', default=0)
+@click.option('-p', '--prefix', default=None)
 def list(depth, prefix):
     jobs = server().get_jobs(folder_depth=depth)
     if prefix:
         import builtins
-        jobs = builtins.list(filter(lambda x: x['fullname'].startswith(prefix) ,jobs))
+        jobs = builtins.list(filter(lambda x: x['fullname'].startswith(prefix), jobs))
     if len(jobs) == 0:
         click.echo('job is not found')
         sys.exit(1)
     console.print_jobs(jobs)
+
 
 @job.command()
 @click.argument('job_name')
@@ -31,4 +34,3 @@ def info(job_name):
             console.print_job(j)
     else:
         console.print_job(job)
-

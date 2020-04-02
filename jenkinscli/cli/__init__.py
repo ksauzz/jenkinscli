@@ -15,6 +15,7 @@ logging.basicConfig(format=logformat, level=logging.WARN)
 
 logger = logging.getLogger(__name__)
 
+
 def set_loglevel(verbose):
     if verbose > 0:
         logging.getLogger().setLevel(logging.DEBUG)
@@ -43,7 +44,6 @@ def main(**kwargs):
             return '*' * len(secret)
         else:
             return secret[:3] + '*' * (len(secret) - 3)
-
 
     format = "{:10}: {}"
     logger.debug(format.format('url', config.url))

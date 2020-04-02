@@ -13,6 +13,7 @@ insecure = None
 GLOBAL_CONFIG_FILE = os.path.join(os.path.expanduser('~'), '.jenkinscli')
 LOCAL_CONFIG_FILE = os.path.join(os.getcwd(), '.jenkinscli')
 
+
 def init(url=None, user=None, password=None, insecure=None):
     this = sys.modules[__name__]
     config = _config()
@@ -25,9 +26,11 @@ def init(url=None, user=None, password=None, insecure=None):
     this.password = get_or_default(config, 'password', password)
     this.insecure = get_or_default(config, 'insecure', insecure)
 
+
 def _config():
     config = __config(LOCAL_CONFIG_FILE)
     return config if config else __config(GLOBAL_CONFIG_FILE)
+
 
 def __config(config_file):
     if os.path.exists(config_file):

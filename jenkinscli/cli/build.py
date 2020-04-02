@@ -1,3 +1,5 @@
+from jenkinscli import console
+from jenkinscli import server
 import click
 import sys
 import time
@@ -5,12 +7,11 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-from jenkinscli import server
-from jenkinscli import console
 
 @click.group()
 def build():
     pass
+
 
 @build.command()
 @click.argument('job_name')
@@ -20,6 +21,7 @@ def info(job_name, build_number):
         build_number = get_latest_build_number(job_name)
     build = server().get_build_info(job_name, build_number)
     console.print_build(build)
+
 
 @build.command()
 @click.argument('job_name')
@@ -33,6 +35,7 @@ def output(job_name, build_number, follow):
     else:
         click.echo(server().get_build_console_output(job_name, build_number))
 
+
 def _streaming_output(job_name, build_number):
     start = 0
     while True:
@@ -45,6 +48,7 @@ def _streaming_output(job_name, build_number):
             start = res['size']
         else:
             break
+
 
 @build.command()
 @click.argument('job_name')
@@ -73,6 +77,7 @@ def run(ctx, job_name, params, follow):
 
     ctx.invoke(output, job_name=job_name, build_number=build_number, follow=True)
 
+
 @build.command()
 @click.argument('job_name')
 @click.argument('build_number', type=int, required=False)
@@ -84,8 +89,6 @@ def stop(job_name, build_number):
 
 # TODO: refactor
 def get_latest_build_number(job_name, no_message=False):
-        if not no_message:
-            click.echo('looking up the latest build number...\n')
-        return server().get_job_info(job_name)['lastBuild']['number']
-
-
+    if not no_message:
+        click.echo('looking up the latest build number...\n')
+    return server().get_job_info(job_name)['lastBuild']['number']
