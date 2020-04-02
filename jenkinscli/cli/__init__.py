@@ -51,9 +51,6 @@ def main(**kwargs):
     logger.debug(format.format('password', mask(config.password)))
     logger.debug(format.format('insecure', config.insecure))
 
-    import jenkinscli
-    jenkinscli.connect(config.url, config.user, config.password)
-
 
 main.add_command(job)
 main.add_command(build)
