@@ -49,12 +49,29 @@ def _streaming_output(job_name, build_number):
 @build.command()
 @click.argument('job_name')
 @click.option('-p', '--params', multiple=True)
-def run(job_name, params):
+@click.option('-f', '--follow', is_flag=True)
+@click.pass_context
+def run(ctx, job_name, params, follow):
     parameters = {'dummy': ''}
     for p in params:
         p = p.split('=')
         parameters[p[0]] = p[1]
-    click.echo(server().build_job(job_name, parameters=parameters))
+    last_build_number = get_latest_build_number(job_name)
+    server().build_job(job_name, parameters=parameters)
+    click.echo('submitted')
+    if not follow:
+        return
+
+    click.echo('waiting for start of the job.', nl=False)
+    while True:
+        time.sleep(2)
+        click.echo('.', nl=False)
+        # note: it's possible next job is not the submitted one above.
+        build_number = get_latest_build_number(job_name, no_message=True)
+        if build_number > last_build_number:
+            break
+
+    ctx.invoke(output, job_name=job_name, build_number=build_number, follow=True)
 
 @build.command()
 @click.argument('job_name')
@@ -66,8 +83,9 @@ def stop(job_name, build_number):
 
 
 # TODO: refactor
-def get_latest_build_number(job_name):
-        click.echo('looking up the latest build number...\n')
+def get_latest_build_number(job_name, no_message=False):
+        if not no_message:
+            click.echo('looking up the latest build number...\n')
         return server().get_job_info(job_name)['lastBuild']['number']
 
 
