@@ -12,8 +12,8 @@ def job():
 
 
 @job.command()
-@click.option('-d', '--depth', default=0)
-@click.option('-p', '--prefix', default=None)
+@click.option('-d', '--depth', default=0, metavar='DEPTH')
+@click.option('-p', '--prefix', default=None, metavar='PREFIX')
 def list(depth, prefix):
     jobs = server().get_jobs(folder_depth=depth)
     if prefix:
