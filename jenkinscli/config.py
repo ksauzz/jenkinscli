@@ -34,6 +34,6 @@ def _config():
 
 def __config(config_file):
     if os.path.exists(config_file):
-        logger.debug("{} was found. loading it...". format(config_file))
+        logger.debug("{} was found. loading configurations from it...". format(config_file))
         with(open(config_file, 'r')) as f:
             return yaml.load(f.read(), Loader=yaml.FullLoader)
