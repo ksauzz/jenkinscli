@@ -3,6 +3,7 @@ import sys
 
 from jenkinscli import server
 from jenkinscli import console
+from jenkinscli.cli import choice
 
 
 @click.group()
@@ -24,9 +25,8 @@ def list(depth, prefix):
         sys.exit(1)
     console.print_jobs(jobs)
 
-
 @job.command()
-@click.argument('job_name')
+@click.argument('job_name', autocompletion=choice.jobs)
 def info(job_name):
     job = server().get_job_info(job_name)
 

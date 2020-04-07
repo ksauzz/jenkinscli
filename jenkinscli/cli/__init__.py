@@ -34,23 +34,6 @@ def main(**kwargs):
     del kwargs['verbose']
 
     config.init(**kwargs)
-    if config.insecure:
-        # this is defined in jenkins
-        os.environ['PYTHONHTTPSVERIFY'] = '0'
-
-    def mask(secret):
-        if not secret:
-            return secret
-        elif len(secret) < 4:
-            return '*' * len(secret)
-        else:
-            return secret[:3] + '*' * (len(secret) - 3)
-
-    format = "{:10}: {}"
-    logger.debug(format.format('url', config.url))
-    logger.debug(format.format('name', config.user))
-    logger.debug(format.format('password', mask(config.password)))
-    logger.debug(format.format('insecure', config.insecure))
 
 
 main.add_command(job)

@@ -16,6 +16,7 @@ LOCAL_CONFIG_FILE = os.path.join(os.getcwd(), '.jenkinscli')
 
 def init(url=None, user=None, password=None, insecure=None):
     this = sys.modules[__name__]
+
     config = _config()
 
     def get_or_default(config, key, default):
@@ -25,6 +26,24 @@ def init(url=None, user=None, password=None, insecure=None):
     this.user = get_or_default(config, 'user', user)
     this.password = get_or_default(config, 'password', password)
     this.insecure = get_or_default(config, 'insecure', insecure)
+
+    if this.insecure:
+        # this is defined in jenkins
+        os.environ['PYTHONHTTPSVERIFY'] = '0'
+
+    def mask(secret):
+        if not secret:
+            return secret
+        elif len(secret) < 4:
+            return '*' * len(secret)
+        else:
+            return secret[:3] + '*' * (len(secret) - 3)
+
+    format = "{:10}: {}"
+    logger.debug(format.format('url', this.url))
+    logger.debug(format.format('name', this.user))
+    logger.debug(format.format('password', mask(this.password)))
+    logger.debug(format.format('insecure', this.insecure))
 
 
 def _config():

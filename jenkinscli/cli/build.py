@@ -1,9 +1,11 @@
-from jenkinscli import console
-from jenkinscli import server
 import click
 import sys
 import time
 import logging
+
+from jenkinscli import console
+from jenkinscli import server
+from jenkinscli.cli import choice
 
 logger = logging.getLogger(__name__)
 
@@ -15,8 +17,8 @@ def build():
 
 
 @build.command()
-@click.argument('job_name')
-@click.argument('build_number', type=int, required=False)
+@click.argument('job_name', autocompletion=choice.jobs)
+@click.argument('build_number', type=int, required=False, autocompletion=choice.builds)
 def info(job_name, build_number):
     if not build_number:
         build_number = get_latest_build_number(job_name)
@@ -25,8 +27,8 @@ def info(job_name, build_number):
 
 
 @build.command()
-@click.argument('job_name')
-@click.argument('build_number', type=int, required=False)
+@click.argument('job_name', autocompletion=choice.jobs)
+@click.argument('build_number', type=int, required=False, autocompletion=choice.builds)
 @click.option('-f', '--follow', is_flag=True)
 def log(job_name, build_number, follow):
     if not build_number:
@@ -52,7 +54,7 @@ def _streaming_log(job_name, build_number):
 
 
 @build.command()
-@click.argument('job_name')
+@click.argument('job_name', autocompletion=choice.jobs)
 @click.option('-p', '--params', metavar='PARAM', multiple=True, help='build parameters. e.g. -p KEY1=VALUE1 -p KEY2=VALUE2 ')
 @click.option('-f', '--follow', is_flag=True, help='follow console log after submitting a build')
 @click.pass_context
@@ -80,8 +82,8 @@ def run(ctx, job_name, params, follow):
 
 
 @build.command()
-@click.argument('job_name')
-@click.argument('build_number', type=int, required=False)
+@click.argument('job_name', autocompletion=choice.jobs)
+@click.argument('build_number', type=int, required=False, autocompletion=choice.builds)
 def stop(job_name, build_number):
     if not build_number:
         build_number = get_latest_build_number(job_name)
