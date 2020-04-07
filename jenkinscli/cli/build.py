@@ -57,7 +57,7 @@ def _streaming_log(job_name, build_number):
 
 @build.command()
 @click.argument('job_name', autocompletion=choice.jobs)
-@click.option('-p', '--params', metavar='PARAM', multiple=True, help='build parameters. e.g. -p KEY1=VALUE1 -p KEY2=VALUE2 ')
+@click.option('-p', '--params', metavar='PARAM', multiple=True, autocompletion=choice.params, help='build parameters. e.g. -p KEY1=VALUE1 -p KEY2=VALUE2 ')
 @click.option('-f', '--follow', is_flag=True, help='follow console log after submitting a build')
 @click.pass_context
 def run(ctx, job_name, params, follow):
