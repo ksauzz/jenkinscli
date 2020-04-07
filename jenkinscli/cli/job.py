@@ -16,6 +16,7 @@ def job():
 @click.option('-d', '--depth', default=0, metavar='DEPTH')
 @click.option('-p', '--prefix', default=None, metavar='PREFIX')
 def list(depth, prefix):
+    """List Jobs"""
     jobs = server().get_jobs(folder_depth=depth)
     if prefix:
         import builtins
@@ -28,6 +29,7 @@ def list(depth, prefix):
 @job.command()
 @click.argument('job_name', autocompletion=choice.jobs)
 def info(job_name):
+    """Show Job Info"""
     job = server().get_job_info(job_name)
 
     if 'jobs' in job:

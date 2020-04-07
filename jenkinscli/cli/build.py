@@ -20,6 +20,7 @@ def build():
 @click.argument('job_name', autocompletion=choice.jobs)
 @click.argument('build_number', type=int, required=False, autocompletion=choice.builds)
 def info(job_name, build_number):
+    """Show Build Info"""
     if not build_number:
         build_number = get_latest_build_number(job_name)
     build = server().get_build_info(job_name, build_number)
@@ -31,6 +32,7 @@ def info(job_name, build_number):
 @click.argument('build_number', type=int, required=False, autocompletion=choice.builds)
 @click.option('-f', '--follow', is_flag=True)
 def log(job_name, build_number, follow):
+    """Get Log"""
     if not build_number:
         build_number = get_latest_build_number(job_name)
     if follow:
@@ -59,6 +61,7 @@ def _streaming_log(job_name, build_number):
 @click.option('-f', '--follow', is_flag=True, help='follow console log after submitting a build')
 @click.pass_context
 def run(ctx, job_name, params, follow):
+    """Start a build job"""
     parameters = {'dummy': ''}
     for p in params:
         p = p.split('=')
@@ -85,6 +88,7 @@ def run(ctx, job_name, params, follow):
 @click.argument('job_name', autocompletion=choice.jobs)
 @click.argument('build_number', type=int, required=False, autocompletion=choice.builds)
 def stop(job_name, build_number):
+    """Stop a build job"""
     if not build_number:
         build_number = get_latest_build_number(job_name)
     server().stop_build(job_name, build_number)
