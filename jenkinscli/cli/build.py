@@ -28,16 +28,16 @@ def info(job_name, build_number):
 @click.argument('job_name')
 @click.argument('build_number', type=int, required=False)
 @click.option('-f', '--follow', is_flag=True)
-def output(job_name, build_number, follow):
+def log(job_name, build_number, follow):
     if not build_number:
         build_number = get_latest_build_number(job_name)
     if follow:
-        _streaming_output(job_name, build_number)
+        _streaming_log(job_name, build_number)
     else:
         click.echo(server().get_build_console_output(job_name, build_number))
 
 
-def _streaming_output(job_name, build_number):
+def _streaming_log(job_name, build_number):
     start = 0
     while True:
         res = server().get_build_progressive_console_output(job_name, build_number, start=start)
