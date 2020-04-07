@@ -8,6 +8,7 @@ from jenkinscli import console
 from jenkinscli import server
 from jenkinscli.cli.job import job
 from jenkinscli.cli.build import build
+from jenkinscli.cli.validate import validate
 
 
 logformat = '%(asctime)s %(levelname)s %(message)s'
@@ -54,3 +55,4 @@ def main(**kwargs):
 
 main.add_command(job)
 main.add_command(build)
+main.add_command(validate)
