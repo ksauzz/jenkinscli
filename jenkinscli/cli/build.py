@@ -81,7 +81,7 @@ def run(ctx, job_name, params, follow):
         if build_number > last_build_number:
             break
 
-    ctx.invoke(output, job_name=job_name, build_number=build_number, follow=True)
+    ctx.invoke(log, job_name=job_name, build_number=build_number, follow=True)
 
 
 @build.command()
