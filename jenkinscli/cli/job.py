@@ -26,6 +26,7 @@ def list(depth, prefix):
         sys.exit(1)
     console.print_jobs(jobs)
 
+
 @job.command()
 @click.argument('job_name', autocompletion=choice.jobs)
 def info(job_name):

@@ -10,6 +10,7 @@ def plugin():
     """Plugin Commands"""
     pass
 
+
 @plugin.command()
 @click.option('-d', '--depth', default=4, type=int)
 def list(depth):

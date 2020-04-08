@@ -52,8 +52,7 @@ def print_action(action):
                     first = False
                     name = ''
 
+
 def print_plugins(plugins):
     for (name, desc), value in plugins.items():
         click.echo("{}={}".format(name, value['version']))
-
-
