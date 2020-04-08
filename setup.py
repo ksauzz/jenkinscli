@@ -10,9 +10,11 @@ def read_requirements(file):
 
 
 install_requires = read_requirements("requirements.txt")
-test_require = read_requirements("requirements-test.txt")
+dev_requires = read_requirements("requirements-dev.txt")
+test_requires = read_requirements("requirements-test.txt")
 extras = {
-    'test': test_require
+    'test': test_requires,
+    'dev' : dev_requires
 }
 
 setuptools.setup(
@@ -27,7 +29,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     setup_requires=['setuptools_scm'],
     install_requires=install_requires,
-    tests_require=test_require,
+    tests_require=test_requires,
     extras_require=extras,
     scripts=['bin/jenkinscli'],
     classifiers=[
