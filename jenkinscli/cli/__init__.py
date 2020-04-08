@@ -9,6 +9,7 @@ from jenkinscli import server
 from jenkinscli.cli.job import job
 from jenkinscli.cli.build import build
 from jenkinscli.cli.validate import validate
+from jenkinscli.cli.plugin import plugin
 
 
 logformat = '%(asctime)s %(levelname)s %(message)s'
@@ -39,3 +40,4 @@ def main(**kwargs):
 main.add_command(job)
 main.add_command(build)
 main.add_command(validate)
+main.add_command(plugin)
