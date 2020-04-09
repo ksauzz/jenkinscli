@@ -21,8 +21,9 @@ def list():
             displayname = executor.get('currentExecutable')
             if displayname:
                 displayname = displayname.get('displayName')
+            elif node['offline']:
+                displayname = 'offline'
             else:
                 displayname = 'idle'
-            status = ' ' if not node['offline'] else '✗'
             executor_name = "{} ({})".format(node['name'], executor['number']+1)
-            click.echo('{} {:15} {}'.format(status, executor_name, displayname))
+            click.echo('{:15} {}'.format(executor_name, displayname))
