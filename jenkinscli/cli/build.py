@@ -67,7 +67,10 @@ def run(ctx, job_name, params, follow):
         p = p.split('=')
         parameters[p[0]] = p[1]
     last_build_number = get_latest_build_number(job_name)
-    server().build_job(job_name, parameters=parameters)
+    if last_build_number:
+        server().build_job(job_name, parameters=parameters)
+    else:
+        server().build_job(job_name)
     click.echo('submitted')
     if not follow:
         return
@@ -98,4 +101,8 @@ def stop(job_name, build_number):
 def get_latest_build_number(job_name, no_message=False):
     if not no_message:
         click.echo('looking up the latest build number...\n')
-    return server().get_job_info(job_name)['lastBuild']['number']
+    job = server().get_job_info(job_name)
+    if job and job.get('lastBuild', None):
+        return job['lastBuild']['number']
+    else:
+        return 0
