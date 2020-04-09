@@ -23,5 +23,6 @@ def list():
                 displayname = displayname.get('displayName')
             else:
                 displayname = 'idle'
-            status = 'online' if not node['offline'] else 'offline'
-            click.echo('{:10} {} {:7} {}'.format(node['name'], executor['number'], status, displayname))
+            status = ' ' if not node['offline'] else '✗'
+            executor_name = "{} ({})".format(node['name'], executor['number']+1)
+            click.echo('{} {:15} {}'.format(status, executor_name, displayname))
