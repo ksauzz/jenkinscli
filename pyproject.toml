@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "jenkinscli"
+version = "0.1.0"
+description = "Jenkins CLI"
+authors = ["Kazuhiro Suzuki <ksauzzmsg@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.5"
+click = "^7.1"
+PyYaml = "^5.3.1"
+python-jenkins = { git = "https://github.com/ksauzz/python-jenkins.git", tag = "0.0.1" }
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.4.1"
+pytest-cov = "^2.8.1"
+pytest-mock = "^3.1.0"
+flake8 = "^3.7.9"
+pylint = "^2.4.4"
+autopep8 = "^1.5.2"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+format = "v{base}+{distance}.{commit}"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
